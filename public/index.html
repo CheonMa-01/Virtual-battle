@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Battle Royale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .game-container {
+            max-width: 640px;
+            width: 100%;
+            background-color: #161b22;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            border: 1px solid #30363d;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .input-group {
+                flex-direction: row;
+            }
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #30363d;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: #58a6ff;
+        }
+        .battle-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: #58a6ff;
+            color: #0d1117;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s, transform 0.1s;
+            cursor: pointer;
+            border: none;
+        }
+        .battle-btn:hover {
+            background-color: #79c0ff;
+        }
+        .battle-btn:active {
+            transform: scale(0.98);
+        }
+        .battle-btn:disabled {
+            background-color: #30363d;
+            cursor: not-allowed;
+            color: #8b949e;
+        }
+        .output-container {
+            margin-top: 2rem;
+            background-color: #0d1117;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #30363d;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            min-height: 100px;
+            text-align: left;
+        }
+        .output-container h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #58a6ff;
+        }
+        .loading-text {
+            color: #8b949e;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .winner-text {
+            font-weight: bold;
+            font-size: 1.25rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        details {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+            background-color: #1e242c;
+            cursor: pointer;
+        }
+        summary {
+            font-weight: bold;
+            color: #58a6ff;
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        summary::before {
+            content: '▶';
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+        details p {
+            margin-top: 1rem;
+            padding-left: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <div class="game-container">
+        <h1 class="text-3xl font-bold text-center text-blue-400">Virtual Battle Royale</h1>
+        <p class="text-center text-gray-400 mt-2">Enter your fighter's prompt and start the battle!</p>
+
+        <details>
+            <summary>How to Play & Rules</summary>
+            <div>
+                <p>Welcome to Virtual Battle Royale! Here's the deal:</p>
+                <ul class="list-disc list-inside mt-2 text-sm">
+                    <li>**Enter a prompt** for your fighter, like "A fire mage" or "A rogue assassin."</li>
+                    <li>Hit the **Battle!** button to start a one-on-one showdown.</li>
+                    <li>The AI will create a **random opponent** and a **battle location** based on your prompt.</li>
+                    <li>Read the battle plot to see the epic fight unfold and find out who the ultimate winner is! 🏆</li>
+                </ul>
+            </div>
+        </details>
+        
+        <div class="input-group">
+            <input type="text" id="prompt-input" placeholder="e.g., A fire mage, A rogue assassin, A tank warrior..." />
+            <button id="battle-btn" class="battle-btn">Battle!</button>
+        </div>
+
+        <div id="output-area" class="output-container mt-4">
+            <p class="text-gray-400 text-center">Your battle log will appear here.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between items-center mt-6 text-xs text-gray-500">
+            <p class="mb-2 sm:mb-0">
+                Created by <a href="https://anilist.co/user/Shohan0001/" target="_blank" class="text-blue-400 hover:underline">Anilist: Shohan0001</a>
+            </p>
+            <p class="mb-2 sm:mb-0">© 2025 Virtual Battle Royale</p>
+            <a href="#" class="text-blue-400 hover:underline" onclick="alert('This button is a placeholder for a comment section. To implement comments, you would integrate a service like Disqus here.');">Comments</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const promptInput = document.getElementById('prompt-input');
+            const battleBtn = document.getElementById('battle-btn');
+            const outputArea = document.getElementById('output-area');
+
+            const explicitWords = ['explicit', 'abusive', 'swear', 'badword'];
+
+            const isExplicit = (text) => {
+                const lowerText = text.toLowerCase();
+                return explicitWords.some(word => lowerText.includes(word));
+            };
+
+            battleBtn.addEventListener('click', async () => {
+                const userPrompt = promptInput.value.trim();
+                if (!userPrompt) {
+                    outputArea.innerHTML = '<p class="text-red-400 text-center">Please enter a prompt to begin the battle!</p>';
+                    return;
+                }
+                
+                if (isExplicit(userPrompt)) {
+                    outputArea.innerHTML = '<p class="text-red-400 text-center">🚫 Sorry, that prompt contains inappropriate content. Please try a different one.</p>';
+                    return;
+                }
+
+                battleBtn.disabled = true;
+                outputArea.innerHTML = '<p class="loading-text text-center">Crafting the battle...</p>';
+
+                try {
+                    // This is the new part! The fetch request goes to YOUR server, not the Google API.
+                    const battleResponse = await fetch('/start-battle', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userPrompt })
+                    });
+
+                    if (!battleResponse.ok) {
+                        throw new Error(`Server call failed with status: ${battleResponse.status}`);
+                    }
+                    
+                    const battleResult = await battleResponse.json();
+                    
+                    const { opponent, location, battlePlot } = battleResult;
+                    const isUserWinner = Math.random() < 0.25;
+                    const winner = isUserWinner ? userPrompt : opponent;
+
+                    const finalOutput = `
+                        <h3 class="text-blue-400">🎤 Welcome to the Virtual Battle Royale! 🎤</h3>
+                        <p class="mt-4 text-center">"And now, get ready for an epic showdown! In this corner, we have the legendary ${userPrompt}! And their opponent, from the dark depths, is the fearsome ${opponent}!"</p>
+                        
+                        <div class="mt-6">
+                            <p class="mt-4"><span class="text-blue-400">🔵 Participant:</span> ${userPrompt}</p>
+                            <p><span class="text-red-400">🔴 Opponent:</span> ${opponent}</p>
+                            <p><span class="text-yellow-400">📜 Location:</span> ${location}</p>
+                        </div>
+                        
+                        <p class="mt-4">${battlePlot}</p>
+                        
+                        <p class="winner-text text-center mt-6">The winner is...<br><span class="text-2xl">${winner}</span></p>
+                    `;
+
+                    outputArea.innerHTML = finalOutput;
+
+                } catch (error) {
+                    console.error('Error generating battle:', error);
+                    outputArea.innerHTML = '<p class="text-red-400 text-center">Whoops! Something went wrong. The server is probably napping. 😴 Try again in a bit!</p>';
+                } finally {
+                    setTimeout(() => {
+                        battleBtn.disabled = false;
+                    }, 5000);
+                }
+            });
+        });
+    </script>
+</body>
+  </html>
+  
