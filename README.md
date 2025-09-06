@@ -37,7 +37,7 @@ This project is configured for easy deployment on Render as a Web Service.
  * Create a new Web Service on Render and connect it to your repository.
  * Configure the environment variable with your API key under Environment > Advanced. Set the key to API_KEY and the value to your secret key.
  * The npm install and npm start commands are configured in the package.json file, so Render will handle the rest.
-File Structure
+# File Structure
 /your-project-name
 ├── server.js               # The backend server
 ├── package.json            # Project dependencies
@@ -45,5 +45,5 @@ File Structure
 └── /public                 # Frontend files
     └── index.html          # The game's UI
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+# License
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
